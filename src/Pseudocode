@@ -1,0 +1,239 @@
+START
+
+
+Class Item
+    Private String productName
+    Private int quantity
+    Private String chosenColor
+    Private String chosenSize
+
+
+    Constructor Item(productName, quantity, chosenColor, chosenSize)
+        this.productName = productName
+        this.quantity = quantity
+        this.chosenColor = chosenColor
+        this.chosenSize = chosenSize
+
+
+    Function getQuantity() : int
+        return quantity
+
+
+    Function getProductName() : String
+        return productName
+
+
+    Function getChosenColor() : String
+        return chosenColor
+
+
+    Function getChosenSize() : String
+        return chosenSize
+End Class
+
+
+Class Product
+    String productName
+    String[] color = {"Red", "Blue", "Yellow"}
+    String[] size = {"S", "M", "L", "XL"}
+    int quantity = 0
+    String chosenColor
+    String chosenSize
+    double price
+End Class
+
+
+Class BusinessProgram
+    Function initializeFyve(f: Product[]) : void
+        for i = 0 to 4
+            f[i] = new Product()
+            f[i].productName = ""
+            f[i].quantity = 0
+            f[i].price = 0
+        end for
+    End Function
+
+
+    Function showMenu() : int
+        Display("1: Show Products")
+        Display("2: Order Products")
+        Display("3: Complete Order")
+        Display("4: Quit")
+        choice = GetInput("Enter your choice (1-4):")
+
+
+        while Not isValid(choice, 1, 4)
+            Display("Please choose an option from the menu (1-4):")
+            choice = GetInput("Enter your choice (1-4):")
+        end while
+
+
+        return choice
+    End Function
+
+
+    Function showProducts(f: Product[]) : int
+        Display("1: " + f[0].productName + " $" + f[0].price)
+        Display("2: " + f[1].productName + " $" + f[1].price)
+        Display("3: " + f[2].productName + " $" + f[2].price)
+        Display("4: " + f[3].productName + " $" + f[3].price)
+        Display("5: " + f[4].productName + " $" + f[4].price)
+        choice = GetInput("Enter your choice (1-5):")
+
+
+        while Not isValid(choice, 1, 5)
+            Display("Please choose an option from the menu (1-5):")
+            choice = GetInput("Enter your choice (1-5):")
+        end while
+
+
+        switch choice
+            case 1
+                Display("Description of Snow Jacket...")
+            case 2
+                Display("Description of Snow Pants...")
+            case 3
+                Display("Description of Beanies...")
+            case 4
+                Display("Description of Crew Necks...")
+            case 5
+                Display("Description of Fleece...")
+        end switch
+
+
+        return choice
+    End Function
+
+
+    Function orderProducts(f: Product[]) : void
+        Display("Choose a product to order:")
+        Display("1: " + f[0].productName)
+        Display("2: " + f[1].productName)
+        Display("3: " + f[2].productName)
+        Display("4: " + f[3].productName)
+        Display("5: " + f[4].productName)
+        choice = GetInput("Enter your choice (1-5):")
+
+
+        while Not isValid(choice, '1', '5')
+            Display("Please choose an option from the menu (1-5):")
+            choice = GetInput("Enter your choice (1-5):")
+        end while
+
+
+        productIndex = ConvertCharToInt(choice) - 1
+
+
+        Display("How many of this item would you like to purchase? (1-4):")
+        quantity = GetInput("Enter the quantity (1-4):")
+
+
+        while Not isValid(quantity, 1, 4)
+            Display("Please enter a valid quantity (1-4):")
+            quantity = GetInput("Enter the quantity (1-4):")
+        end while
+
+
+        chosenColor = chooseColor(f[productIndex].color)
+        chosenSize = chooseSize(f[productIndex].size)
+
+
+        f[productIndex].quantity += quantity
+        f[productIndex].chosenColor = chosenColor
+        f[productIndex].chosenSize = chosenSize
+    End Function
+
+
+    Function chooseColor(colors: String[]) : String
+        Display("Choose a color:")
+        Display("1: " + colors[0])
+        Display("2: " + colors[1])
+        Display("3: " + colors[2])
+        choice = GetInput("Enter your choice (1-3):")
+
+
+        while Not isValid(choice, '1', '3')
+            Display("Please choose an option from the menu (1-3):")
+            choice = GetInput("Enter your choice (1-3):")
+        end while
+
+
+        switch choice
+            case '1': return colors[0]
+            case '2': return colors[1]
+            case '3': return colors[2]
+        end switch
+    End Function
+
+
+    Function chooseSize(sizes: String[]) : String
+        Display("Choose a size:")
+        Display("1: " + sizes[0])
+        Display("2: " + sizes[1])
+        Display("3: " + sizes[2])
+        Display("4: " + sizes[3])
+        choice = GetInput("Enter your choice (1-4):")
+
+
+        while Not isValid(choice, '1', '4')
+            Display("Please choose an option from the menu (1-4):")
+            choice = GetInput("Enter your choice (1-4):")
+        end while
+
+
+        switch choice
+            case '1': return sizes[0]
+            case '2': return sizes[1]
+            case '3': return sizes[2]
+            case '4': return sizes[3]
+        end switch
+    End Function
+
+
+    Function completeOrder(f: Product[]) : void
+        Constants
+            TAX = 0.0875
+            SHIPPING_FEE = 8.75
+
+
+        Variables
+            total = 0
+            tax
+            shippingFee = SHIPPING_FEE
+            choice
+
+
+        Display("Would you like to pick up in person, or would you like shipping?")
+        Display("1: Pick-up")
+        Display("2: Shipping")
+        choice = GetInput("Enter your choice (1-2):")
+
+
+        while Not isValid(choice, '1', '2')
+            Display("Please choose an option from the menu (1-2):")
+            choice = GetInput("Enter your choice (1-2):")
+        end while
+
+
+        if choice == '1'
+            shippingFee = 0
+        end if
+
+
+        for i = 0 to 4
+            total += f[i].price * f[i].quantity
+        end for
+
+
+        if total >= 50
+            shippingFee = 0
+        end if
+
+
+        total += shippingFee
+        tax = total * TAX
+        total = total + tax
+
+
+        Display("-------------------------------------------------")
+        Display("QTY  Description         Color
