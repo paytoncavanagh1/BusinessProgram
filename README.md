@@ -1,1 +1,1 @@
-# BusinessProgram
+# Business Program
